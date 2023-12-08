@@ -216,18 +216,7 @@ function renderCanvas() {
 
   createGrid(ctxBackground)
   console.log(circles)
-  var timer = setInterval( function() {
-    
-    for (var i = 0; i < circles.length; i++)
-    {
-      if (circles[i].currentRadius > minRadius)
-      {
-        circles[i].currentRadius -= 1
-      } 
-    }
-  
-    draw(circles, ctxCircles)
-  }, 25)
+  NoteBlocks()
 
   var timerCircle = setInterval( function(){
     x = Math.floor(Math.random()*2.9)
@@ -254,4 +243,19 @@ function createGrid(ctx) {
       ctx.fillRect(0 + (size+pad_size) * i, 0 + (size+pad_size) * j, size, size);
     }
   }
+}
+
+function NoteBlocks(){
+  var timer = setInterval( function() {
+    
+    for (var i = 0; i < circles.length; i++)
+    {
+      if (circles[i].currentRadius > minRadius)
+      {
+        circles[i].currentRadius -= 1
+      } 
+    }
+  
+    draw(circles, ctxCircles)
+  }, 6000/138)
 }
