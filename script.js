@@ -8,6 +8,12 @@ window.addEventListener("keydown", function (event) {
     return; // Do nothing if the event was already processed
   }
 
+  if(event.key() == "Echap")
+  {
+    // Quitter : Redirection
+
+  }
+
   checkCircle(circles, event.key.toLowerCase())
   event.preventDefault();
 }, true);
@@ -273,6 +279,6 @@ function NoteBlocks(){
     i = Math.floor(Math.random()*(letter.length-0.1))
     circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
     console.log(letter[i])
-  }, 60000/138)
+  }, 20000/138)
 
 }
