@@ -101,6 +101,7 @@ var earlyRadius = 45
 var maxRadius = 100
 var currentRadius = 100
 var scaleBy = 1
+var audio = new Audio('enchanted-chimes-177906.mp3')
 
 
 function Circle(x, y, radius, letter) {
@@ -181,13 +182,38 @@ function draw(circles, ctx) {
 // Resize
 function startGame()
 {
+  const beats = [
+    100, 525, 980, 1950, 2500, 2850, 3480, 5200, 5650,
+    6100, 6300, 6800, 7200, 7500, 7900, 
+    8350, 8724, 9200, 15700, 17735, 18250, 22400,
+    22500, 22800, 22950, 23000, 23200, 
+    23700, 23900, 26500, 26700, 26900, 29800,
+    30200, 31100, 31400, 31550, 32200, 32900,
+    33150, 34000, 34770, 34950, 35720, 36300, 36500, 36750,
+    37150,37350,37600,38000,38200,39150,39750,40850,40950,
+    41520,41860,42670,42980,43150,43250,43400,44100,44350,44600,45300,
+    46100,46950,47600,47950,48500,48650,49350,49550,49900,50000,50150,
+    50400,50600,51100,51300,51880,52750,53000,53650, 53850, 54500,
+54700, 55150, 55600, 56220, 56480, 56780, 56830, 56880, 57000, 57250,
+57850, 57940, 58300, 58450, 59150, 63970, 63250, 66410, 66550, 66700,
+66880, 67000, 67230, 67420, 67530, 67640, 67960, 70120, 70400, 71310
+]
+
+for (var i = 4; i < beats.length; i += 3)
+{
+  setTimeout(()=>{
+    NoteBlocks();
+  }, beats[i]-2500)
+}
   var timerEndGame = setInterval(() => {
     endGame();
-  }, 4000);
+  }, audio.duration * 1000);
 }
 
 function endGame(){
   gameOver = true
+  audio.pause();
+  audio.currentTime = 0;
   clearInterval(timerBass)
   clearInterval(timerCircle)
   
@@ -198,6 +224,8 @@ function endGame(){
 function renderCanvas() {
   var canvaBackground = document.getElementById("canvaBackground")
   var canvaCircles = document.getElementById("canvaCircles")
+  audio.play()
+  console.log(audio.duration)
 
   if(gameOver == true)
   {
@@ -217,10 +245,7 @@ function renderCanvas() {
       circlesEarly.push(new Circle(75+155*i, 72+155*j, earlyRadius))
     }
   }
-  
-
   createGrid(ctxBackground)
-  console.log(circles)
   var timer = setInterval( function() {
     
     for (var i = 0; i < circles.length; i++)
@@ -230,7 +255,6 @@ function renderCanvas() {
         circles[i].currentRadius -= 1
       }
     }
-  
     draw(circles, ctxCircles)
   }, 25)
 
@@ -243,7 +267,6 @@ function renderCanvas() {
       {
         circles[i].timeBeforeRemove -= 1
         circles[i].color = "red"
-        //console.log("Vite !")
       }
     }
 
@@ -254,7 +277,6 @@ function renderCanvas() {
       score -= 10
       scoreText.innerHTML = "SCORE: " + score
       circles.shift();
-      //console.log("clean")
     }    
 
   }, 1)
@@ -266,14 +288,11 @@ function renderCanvas() {
 }
 
 function createGrid(ctx) {
-  let colors = ["#11ff22", "#4455ee"]
   size = 150;
   pad_size = 5;
   for (let i = 0 ; i < 3 ; i++) {
     for (let j = 0 ; j < 3 ; j++) {
-      //console.log("HSL("+(120 + i*30 + j*20).toString()+", 45%, 45%)")
-    
-      ctx.fillStyle = "HSL("+(0 + (i+3*j)*40).toString()+", 45%, 45%)"//hsvToRgb(10 + i*5 + j, 90, 90);
+      ctx.fillStyle = "HSL("+(0 + (i+3*j)*40).toString()+", 45%, 45%)"
       ctx.fillRect(0 + (size+pad_size) * i, 0 + (size+pad_size) * j, size, size);
     }
   }
@@ -281,28 +300,11 @@ function createGrid(ctx) {
 
 function NoteBlocks(){
 
-
-  timerCircle = setInterval( function(){
-    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
+  letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
     i = Math.floor(Math.random()*(letter.length-0.1))
     x = i%3
     y = Math.floor(i/3)
     circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
     console.log(letter[i])
-  }, 1200000/138)
-
-  timerBass = setInterval( function(){
-    doIt = Math.random()
-    if (doIt < 0.9)
-    {
-      return;
-    }
-    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
-    i = Math.floor(Math.random()*(letter.length-0.1))
-    x = i%3
-    y = Math.floor(i/3)
-    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
-    console.log(letter[i])
-  }, 60000/138)
 
 }
