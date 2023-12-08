@@ -2,21 +2,29 @@ var circles = []
 var circlesPerfect = []
 var circlesEarly = []
 var score = 0
+var gameOver = false
+var timerCircle = null
+var timerBass = null
 
 window.addEventListener("keydown", function (event) {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
   }
 
-  if(event.key() == "Echap")
+  if(event.key == "Escape")
   {
-    // Quitter : Redirection
-
+    CloseFenetre()
   }
 
   checkCircle(circles, event.key.toLowerCase())
   event.preventDefault();
 }, true);
+
+function CloseFenetre()
+{
+  // Quitter : Redirection
+  this.close()
+}
 
 function checkCircle(circles, key)
 {
@@ -171,11 +179,32 @@ function draw(circles, ctx) {
 }
 
 // Resize
+function startGame()
+{
+  var timerEndGame = setInterval(() => {
+    endGame();
+  }, 4000);
+}
+
+function endGame(){
+  gameOver = true
+  clearInterval(timerBass)
+  clearInterval(timerCircle)
+  
+  comment = document.getElementById("comment")
+  comment.innerHTML = "GAME OVER !"
+}
 
 function renderCanvas() {
   var canvaBackground = document.getElementById("canvaBackground")
   var canvaCircles = document.getElementById("canvaCircles")
-  
+
+  if(gameOver == true)
+  {
+    return;
+  }
+
+  startGame()
 
   const ctxBackground = canvaBackground.getContext("2d")
   const ctxCircles = canvaCircles.getContext("2d")
@@ -230,14 +259,7 @@ function renderCanvas() {
 
   }, 1)
 
-  var timerCircle = setInterval( function(){
-    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
-    i = Math.floor(Math.random()*(letter.length-0.1))
-    x = i%3
-    y = Math.floor(i/3)
-    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
-    console.log(letter[i])
-  }, 2500)
+  NoteBlocks()
   drawPerfect(circlesPerfect, ctxBackground)
   drawEarly(circlesEarly, ctxBackground)
   draw(circles, ctxCircles)
@@ -258,27 +280,29 @@ function createGrid(ctx) {
 }
 
 function NoteBlocks(){
-  var timerCircle = setInterval( function(){
-    x = Math.floor(Math.random()*2.9)
-    y = Math.floor(Math.random()*2.9)
-    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
+
+
+  timerCircle = setInterval( function(){
+    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
     i = Math.floor(Math.random()*(letter.length-0.1))
+    x = i%3
+    y = Math.floor(i/3)
     circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
     console.log(letter[i])
-  }, 60000/138)
+  }, 1200000/138)
 
-  var timerBass = setInterval( function(){
+  timerBass = setInterval( function(){
     doIt = Math.random()
-    if (doIt < 0.5)
+    if (doIt < 0.9)
     {
       return;
     }
-    x = Math.floor(Math.random()*2.9)
-    y = Math.floor(Math.random()*2.9)
-    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
+    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
     i = Math.floor(Math.random()*(letter.length-0.1))
+    x = i%3
+    y = Math.floor(i/3)
     circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
     console.log(letter[i])
-  }, 20000/138)
+  }, 60000/138)
 
 }
