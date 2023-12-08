@@ -1,0 +1,23 @@
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    transform: translate(-35%,25%);
+}
+
+#canvaCircles {
+    z-index: 1;
+}
+
+#canvaBackground {
+    z-index: 0;
+}
+
+.center-div {
+  
+   background-color: red;
+
+}
