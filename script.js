@@ -216,16 +216,20 @@ function renderCanvas() {
 
   createGrid(ctxBackground)
   console.log(circles)
-  NoteBlocks()
+  var timer = setInterval( function() {
+    
+    for (var i = 0; i < circles.length; i++)
+    {
+      if (circles[i].currentRadius > minRadius)
+      {
+        circles[i].currentRadius -= 1
+      } 
+    }
+  
+    draw(circles, ctxCircles)
+  }, 25)
 
-  var timerCircle = setInterval( function(){
-    x = Math.floor(Math.random()*2.9)
-    y = Math.floor(Math.random()*2.9)
-    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
-    i = Math.floor(Math.random()*(letter.length-0.1))
-    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
-    console.log(letter[i])
-  }, 2500)
+  NoteBlocks();
   drawPerfect(circlesPerfect, ctxBackground)
   drawEarly(circlesEarly, ctxBackground)
   draw(circles, ctxCircles)
@@ -246,16 +250,13 @@ function createGrid(ctx) {
 }
 
 function NoteBlocks(){
-  var timer = setInterval( function() {
-    
-    for (var i = 0; i < circles.length; i++)
-    {
-      if (circles[i].currentRadius > minRadius)
-      {
-        circles[i].currentRadius -= 1
-      } 
-    }
-  
-    draw(circles, ctxCircles)
-  }, 6000/138)
+  var timerCircle = setInterval( function(){
+    x = Math.floor(Math.random()*2.9)
+    y = Math.floor(Math.random()*2.9)
+    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
+    i = Math.floor(Math.random()*(letter.length-0.1))
+    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
+    console.log(letter[i])
+  }, 2500)
+
 }
