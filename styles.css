@@ -1,3 +1,7 @@
+body {
+    background-color: #03224c;
+}
+
 canvas {
     padding: 0;
     margin: auto;
@@ -5,7 +9,7 @@ canvas {
     position: absolute;
     top: 45%;
     left: 45%;
-    transform: translate(-35%,25%);
+    transform: translate(-32%,25%);
 }
 
 #canvaCircles {
@@ -15,9 +19,21 @@ canvas {
 #canvaBackground {
     z-index: 0;
 }
+#comment {
+    color: rgb(202, 202, 202);
+    text-align: center;
+}
 
-.center-div {
-  
-   background-color: red;
+#score {
+    color: rgb(202, 202, 202);
+}
 
+.rulesBox {  
+    position: absolute;
+    top: 20%;
+    right: 10%;
+}
+
+h1, h2 {
+    color: rgb(202, 202, 202);
 }

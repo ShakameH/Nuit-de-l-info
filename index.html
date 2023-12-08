@@ -8,11 +8,21 @@
 </style>
 <script src="./script.js"></script>
 <body onload="renderCanvas()">
+    <h1 id="score">SCORE: 0</h1>
     <div class="center-div" style="position: relative">
         <canvas id="canvaCircles" width="500" height="500" margin="0" padding="0"></canvas>
         <canvas id="canvaBackground" width="500" height="500" ></canvas>
     </div>
-    <h1 class="comment">TEST</h1>
+    <div class="rulesBox">
+        <h1>Règles du jeu</h1>
+        <h2>PARFAIT ! : +400</h2>
+        <h2>Trop tôt ! : +150</h2>
+        <h2>Trop tard ! : +50</h2>
+        <h2>Raté ! : -10</h2>
+        <h2>Mauvaise touche ! : -15</h2>
+    </div>
+
+    <h1 id="comment"></h1>
 
 </body>
 </html>

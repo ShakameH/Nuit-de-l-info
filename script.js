@@ -9,104 +9,69 @@ window.addEventListener("keydown", function (event) {
   }
 
   checkCircle(circles, event.key.toLowerCase())
-  /*
-  switch (event.key.toLowerCase()) {
-    case "r":
-      // code for "down arrow" key press.
-      checkCircle(circles, "r")
-      break;
-    case "f":
-      // code for "down arrow" key press.
-      checkCircle(circles[1])
-      break;
-    case "v":
-      // code for "down arrow" key press.
-      checkCircle(circles[2])
-      break;
-    case "t":
-      // code for "down arrow" key press.
-      checkCircle(circles[3])
-      break;
-    case "g":
-      // code for "down arrow" key press.
-      checkCircle(circles[4])
-      break;
-    case "b":
-      // code for "down arrow" key press.
-      checkCircle(circles[5])
-      break;
-    case "y":
-      // code for "down arrow" key press.
-      checkCircle(circles[6])
-      break;
-    case "h":
-      // code for "down arrow" key press.
-      checkCircle(circles[7])
-      break;
-    case "n":
-      // code for "down arrow" key press.
-      checkCircle(circles[8])
-      break;    
-    default:
-      return; // Quit when this doesn't handle the key event.
-  }*/
-
-  // Cancel the default action to avoid it being handled twice
   event.preventDefault();
 }, true);
 
 function checkCircle(circles, key)
 {
-   comment = document.getElementsByClassName("comment")
+   comment = document.getElementById("comment")
+   scoreText = document.getElementById("score")
+
+   if (circles.length === 0)
+   {
+    return;
+   }
 
    let circle = circles[0]
    // Mauvaise touche
    if (circle.letter != key)
    {
+    comment.innerHTML = "Mauvaise touche !"
+    score -= 15
     console.log("Mauvaise touche !")
+    scoreText.innerHTML = "SCORE: " + score 
+    // Remove le cercle
+    circles.shift()
     return;
    }
 
   // Trop tard
    if(circle.currentRadius < perfectRadius)
    {
-    comment.innerHTML = "Trop tard"
+    comment.innerHTML = "Trop tard !"
     console.log("Trop tard")
-    
+    score += 50
    }
 
    //Parfait
    if(perfectRadius < circle.currentRadius && circle.currentRadius < earlyRadius)
    {
-    comment.innerHTML = "PARFAIT"
+    comment.innerHTML = "PARFAIT !"
     console.log("PARFAIT")
+    score += 400
    }
 
    //Trop tôt
    if(earlyRadius < circle.currentRadius)
    {
-    comment.innerHTML = "Trop tôt"
-    ctx.fillText("Trop tôt", circle.x, circle.y + 65);
+    comment.innerHTML = "Trop tôt !"
+    console.log("Trop tôt")
+    score += 150
    }
-   
-   // Remove le cercle
-   circles = circles.shift();
+   scoreText.innerHTML = "SCORE: " + score 
+   circles.shift()
 }
 
 function drawShape(ctx, x, y, r, sides, rot) {
   rot = rot * Math.PI / 180
-  // move the canvas to the center position
   ctx.translate(x, y);
 
   for (let i = 0; i < sides; i++) {
-    // calculate the rotation
     const rotation = rot + ((Math.PI * 2)  / sides) * i;
 
-    // for the first point move to
     if (i === 0) {
       ctx.moveTo(r * Math.cos(rotation), r * Math.sin(rotation));
     } else {
-      // for the rest draw a line
       ctx.lineTo(r * Math.cos(rotation), r * Math.sin(rotation));
     }
   }
@@ -129,12 +94,14 @@ function Circle(x, y, radius, letter) {
   this.y = y;
   this.currentRadius = radius;
   this.letter = letter;
+  this.timeBeforeRemove = 40;
+  this.color = '#E1E1E1'
 }
 
 Circle.prototype.draw = function(ctx) {
   ctx.beginPath();
   ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2)
-  ctx.strokeStyle = '#E1E1E1'
+  ctx.strokeStyle = this.color
   ctx.lineWidth = 5
   ctx.stroke()
 }
@@ -142,6 +109,9 @@ Circle.prototype.draw = function(ctx) {
 Circle.prototype.drawPerfect = function(ctx) {
   ctx.beginPath();
   ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2)
+  ctx.font = "30px Arial";
+  ctx.fillStyle = 'white';
+  ctx.fillText(this.letter, this.x - 10, this.y + 10);
   ctx.strokeStyle ='rgb(255,215,0,0.6)'
   ctx.lineWidth = 2
   ctx.stroke()
@@ -204,11 +174,11 @@ function renderCanvas() {
   const ctxBackground = canvaBackground.getContext("2d")
   const ctxCircles = canvaCircles.getContext("2d")
 
-  
+  letter = ["R", "T", "Y", "F", "G", "H", "V", "B", "N"]
   for (let i = 0 ; i < 3 ; i++) {
     for (let j = 0 ; j < 3 ; j++) {
       //circles.push(new Circle(75+155*i, 72+155*j, 100-20*((i+j))))
-      circlesPerfect.push(new Circle(75+155*i, 72+155*j, perfectRadius))
+      circlesPerfect.push(new Circle(75+155*i, 72+155*j, perfectRadius, letter[i+3*j]))
       circlesEarly.push(new Circle(75+155*i, 72+155*j, earlyRadius))
     }
   }
@@ -223,13 +193,45 @@ function renderCanvas() {
       if (circles[i].currentRadius > minRadius)
       {
         circles[i].currentRadius -= 1
-      } 
+      }
     }
   
     draw(circles, ctxCircles)
   }, 25)
 
-  NoteBlocks();
+  var timerCheckLateCircles = setInterval( function()
+  {
+    for (var i = 0; i < circles.length; i++)
+    {
+
+      if (circles[i].currentRadius == minRadius && circles[i].timeBeforeRemove > 0)
+      {
+        circles[i].timeBeforeRemove -= 1
+        circles[i].color = "red"
+        //console.log("Vite !")
+      }
+    }
+
+    if(circles.length > 0 && circles[0].timeBeforeRemove <= 0)
+    {
+      document.getElementById("comment").innerHTML = "Raté !"
+      scoreText = document.getElementById("score")
+      score -= 10
+      scoreText.innerHTML = "SCORE: " + score
+      circles.shift();
+      //console.log("clean")
+    }    
+
+  }, 1)
+
+  var timerCircle = setInterval( function(){
+    letter = ["r", "t", "y", "f", "g", "h", "v", "b", "n"]
+    i = Math.floor(Math.random()*(letter.length-0.1))
+    x = i%3
+    y = Math.floor(i/3)
+    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
+    console.log(letter[i])
+  }, 2500)
   drawPerfect(circlesPerfect, ctxBackground)
   drawEarly(circlesEarly, ctxBackground)
   draw(circles, ctxCircles)
