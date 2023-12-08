@@ -250,3 +250,29 @@ function createGrid(ctx) {
     }
   }
 }
+
+function NoteBlocks(){
+  var timerCircle = setInterval( function(){
+    x = Math.floor(Math.random()*2.9)
+    y = Math.floor(Math.random()*2.9)
+    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
+    i = Math.floor(Math.random()*(letter.length-0.1))
+    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
+    console.log(letter[i])
+  }, 60000/138)
+
+  var timerBass = setInterval( function(){
+    doIt = Math.random()
+    if (doIt < 0.5)
+    {
+      return;
+    }
+    x = Math.floor(Math.random()*2.9)
+    y = Math.floor(Math.random()*2.9)
+    letter = ["r", "f", "v", "t", "g", "b", "y", "h", "n"]
+    i = Math.floor(Math.random()*(letter.length-0.1))
+    circles.push(new Circle(75+155*x, 72+155*y, currentRadius, letter[i]))
+    console.log(letter[i])
+  }, 60000/138)
+
+}
